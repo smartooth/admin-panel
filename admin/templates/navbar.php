@@ -22,10 +22,9 @@
                             <li class="<?= @$nav[7] ?>"><a href="/admin/users"><i class="icon-eye-open"></i> View</a></li>
                             <li class="<?= @$nav[8] ?>"><a href="/admin/adduser"><i class="icon-plus"></i> Add</a></li>
                         </ul>
-                        <ul class="nav visible-tablet">
-                            <li class="nav-header">Quick Links</li>
-                            <li class=""><a href="/admin"><i class="icon-home"></i> Home</a> | <a href="/admin/logout"><i class="icon-signout"></i> Log Out</a></li>
-                        </ul>
+                        <span class="nav visible-tablet">
+                            <span class="nav-header">Quick Links</span> <a href="/admin"><i class="icon-home"></i> Home</a> | <a href="/admin/logout"><i class="icon-signout"></i> Log Out</a></span>
+                        </span>
                         <p class="navbar-text pull-right">
                             Logged in as <a href="/admin/profile" class="navbar-link" style="text-transform: capitalize"><?= $user["name"] ?> <i class="icon-user"></i></a>
                         </p>
