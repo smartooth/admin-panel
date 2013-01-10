@@ -18,34 +18,32 @@
     function get_user_array($username = "") {
         /* Does all of the heavy lifting for getting user stats. returns false if not logged in. */
         $db = new db();
-            if ($username == "") {
-                if (isset($_SESSION["id"])) {
-                    $sid = $_SESSION["id"];
-                    if ($query = $db->prepare("SELECT id, name, status from `users` where id=?")) {
-                        $query->bind_param("i", $sid);
-                        $query->execute();
-                        $query->bind_result($id, $name, $status);
-                        $query->fetch();
-                        $query->close();
-                        $db->close();
-                        return array("name" => $name, "status" => $status, "id" => $id);
-                    } else { return false; }
-                } else { return false; }
-            } else {
-                if ($query = $db->prepare("SELECT id, name, passhash, status from `users` where name=?")) {
-                    $query->bind_param("s", $username);
+        if ($username == "") {
+            if (isset($_SESSION["id"])) {
+                $sid = $_SESSION["id"];
+                if ($query = $db->prepare("SELECT id, name, status from `users` where id=?")) {
+                    $query->bind_param("i", $sid);
                     $query->execute();
-                    $query->bind_result($id, $name, $passhash, $status);
+                    $query->bind_result($id, $name, $status);
                     $query->fetch();
                     $query->close();
                     $db->close();
-                    return array("name" => $name, "status" => $status, "id" => $id, "passhash" => $passhash);
+                    return array("name" => $name, "status" => $status, "id" => $id);
                 } else { return false; }
-            }
+            } else { return false; }
         } else {
-            $db->close();
-            return false;
+            if ($query = $db->prepare("SELECT id, name, passhash, status from `users` where name=?")) {
+                $query->bind_param("s", $username);
+                $query->execute();
+                $query->bind_result($id, $name, $passhash, $status);
+                $query->fetch();
+                $query->close();
+                $db->close();
+                return array("name" => $name, "status" => $status, "id" => $id, "passhash" => $passhash);
+            } else { return false; }
         }
+        $db->close();
+        return false;
     }
     class PassHash {
         public static function rand_str($length) {
@@ -119,6 +117,10 @@
 
             if (PassHash::compare($pass, $user_login["passhash"])) {
                 $_SESSION["id"] = $user_login["id"]; //everything is resolved from ID, session doesn't use excessive storage in this. the db does.
+                $db = new db();
+                $db->query("UPDATE users SET status=1 where id='{$user_login["id"]}';");
+                $db->close();
+                /* I got it from a database. Trusting it. :v */
                 return 4; // good login. TODO: make this use true/false?
             } else {
                 return 5; // bad login (incorrect password)
@@ -126,6 +128,13 @@
         }
         public static function logout() {
             session_destroy();
+            $db = new db();
+            if ($query = $db->prepare("UPDATE users SET status=0 WHERE id=?")) {
+                $query->bind_param("i", @$_SESSION["id"]);
+                $query->execute();
+                $query->close();
+            } // if this fails, we have a problem. TODO: add logging
+            $db->close();
             session_start();
         }
         public static function create($user, $pass) {
@@ -205,6 +214,7 @@
     }
     
     $user = get_user_array();
-    if (!$user)
+    if (!$user) {
         UserFunctions::logout(); // previously deleted user.
+    }
 ?>
