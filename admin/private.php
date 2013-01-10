@@ -15,7 +15,8 @@
         }
     }
 
-    function get_user_array() {
+    static function get_user_array() {
+        /* Does all of the heavy lifting for getting user stats. returns false if not logged in. */
         $db = new db();
         if (isset($_SESSION["id"])) {
             $id = $_SESSION["id"];
@@ -26,8 +27,10 @@
                 $query->fetch();
                 $query->close();
             }
+            $db->close();
             return array("name" => $name, "status" => $status, "id" => $id);
         } else {
+            $db->close();
             return false;
         }
     }
@@ -84,52 +87,37 @@
             }
         }
 
-        public static function login($user, $pass) {
-        //todo: something along the lines of making this transferrable to anyone
-            $db = new db();
-            switch (@$_SESSION["status"]) { // cheap_error_handling.jpg
-            // oh no, he's using session cookies. i'd use something better, but the sniffing vuln is still there. SSL Suggested.
-                case 0:
-                    break; // not logged in
-                case 1:
-                    return 1; // logged in
-                    break;
-                case 2:
-                    return 2; // banned via session cookie. how scary.
-                    break;
-                default:
-                    break; // never logged in before or they ain't sending a cookie.
-            }
-            // not logged in, continue
-            
+        public static function login($username, $pass) {
+            // TODO: something along the lines of making this transferrable to anyone
             $user = get_user_array();
-            
-            if (!$user) {
-                $_SESSION["status"] = 0;
-                $db->close();
-                return 3; //user doesn't exist
+            $user_login = get_user_array($username);
+            if (!$user_login) return 3; // no such user
+            if ($user) {
+                switch ($user["status"]) { // cheap_error_handling.jpg
+                // oh no, he's using session cookies. i'd use something better, but the sniffing vuln is still there. SSL Suggested.
+                    case 0:
+                        break; // not logged in, but session cookie sent.
+                    case 1:
+                        return 1; // logged in already.
+                        break;
+                    case 2:
+                        return 2; // banned. how scary.
+                        break;
+                    default:
+                        die("Technically what just happened isn't even possible. \$user[\"status\"] is empty/invalid.");
+                } // not logged in, continue
             }
-            if ($user["status"] == 2) {
-                $_SESSION["status"] = 2;
-                $db->close();
-                return 2; //banned
-            }
-            if (PassHash::Compare($pass, $user["passhash"])) {
-                $_SESSION["status"] = 1;
-                $_SESSION["id"] = $user["id"]; //everything is resolved from ID, session doesn't use excessive storage in this. the db does.
-                $db->close();
-                return 4; // good login
+
+            if (PassHash::compare($pass, $user_login["passhash"])) {
+                $_SESSION["id"] = $user_login["id"]; //everything is resolved from ID, session doesn't use excessive storage in this. the db does.
+                return 4; // good login. TODO: make this use true/false?
             } else {
-                $_SESSION["status"] = 0;
-                $db->close();
-                return 5; // bad login
+                return 5; // bad login (incorrect password)
             }
-            $db->close();
         }
         public static function logout() {
             session_destroy();
             session_start();
-            $_SESSION["status"] = 0;
         }
         public static function create($user, $pass) {
             $db = new db();
@@ -137,9 +125,10 @@
             if ($x = $db->prepare("INSERT INTO `users` ( `name`, `passhash`, `status` ) VALUES ( ?, ?, 0 );")) {
                 $x->bind_param("ss", $user, $passhash);
                 $x->execute(); $x->close();
+                $db->close();
+                return true;
             } // All hail prepared queries
-            $db->close();
-            return;
+            return false;
         }
     }
     class Changelog {
@@ -148,15 +137,15 @@
             $time = date("Y-m-d H:i:s");
             if ($query = $db->prepare("INSERT INTO `changelog` ( `type`, `comment`, `authorid`, `private`, `web`, `major`, `date` ) " .
                 "VALUES ( ?,?,?,?,?,?,?)")) {
-            $query->bind_param("isiiiis", $type, $change, $author, $priv, $web, $major, $time);
-            $query->execute();
-            $query->close();
-            $db->close();
-            return true;
-        } else {
+                $query->bind_param("isiiiis", $type, $change, $author, $priv, $web, $major, $time);
+                $query->execute();
+                $query->close();
+                $db->close();
+                return true;
+            } else {
                 $db->close();
                 return false; // not likely to happen, but /shrug (db() Would have already errored)
-        }
+            }
         }
         public static function changes ( $limit = 200 ) {
             // TODO: Change this to not look so messy.
