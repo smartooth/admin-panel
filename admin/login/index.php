@@ -34,7 +34,7 @@ EXTRA;
                 die();
                 break;
             default:
-                die("$_SESSION is no longer working - PHP installation is broken or something is missing (func: Login())");
+                die("Login returned a malfunctioned result.");
                 break;
         }
 
@@ -42,8 +42,7 @@ EXTRA;
 
 
 
-    if (@$_SESSION["status"] == 1) {
-        
+    if (@$user["status"] == 1) {
         if (DEBUG != True) {
             header("Location: /admin");
             die();
