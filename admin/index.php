@@ -33,10 +33,10 @@
         $class_ = $row["major"] == 1 ? "text-error" : "";
         $class_ = $row["private"] == 1 ? "text-info" : $class_;
         echo <<<CHANGE
-                    <div class="hero-unit" style="padding: 10px 20px 10px 20px">
-                        <h4>{$row["name"]} - {$type} <span style="float: right"><i class="icon-pencil"></i> <i class="icon-remove-circle"></i></span></h4>
+                    <div class="well">
+                        <h4 style="margin: 0">{$row["name"]} - {$type} <span style="float: right"><i class="icon-pencil"></i> &nbsp; <i class="icon-remove-circle"></i></span></h4>
                         <small>{$row["date"]}</small>
-                        <p class="{$class_}">{$row["comment"]}</p>
+                        <p class="{$class_}" style="margin: 0">{$row["comment"]}</p>
                     </div>
 CHANGE;
         }
