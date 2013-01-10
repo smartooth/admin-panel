@@ -18,10 +18,9 @@
                     <div class="hero-unit">
                         <p>Change various things about your profile here.</p>
                         <form method="POST">
-                            <div class="input-prepend input-append">
+                            <div class="input-prepend">
                                 <span class="add-on"><i class="icon-user"></i></span>
                                 <input type="text" value="<?= $user['name'] ?>" name="user">
-                                <span class="add-on">Only Administrators can change your username.</span>
                             </div>
                             <div class="input-prepend">
                                 <span class="add-on"><i class="icon-key"></i></span>

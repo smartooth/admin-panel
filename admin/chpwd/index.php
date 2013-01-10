@@ -49,6 +49,7 @@ MESSAGE;
                         <p>Change your password here.</p>
 <?= $message ?>
                         <form method="POST">
+                            <input type="hidden" value="1" name="type">
                             <div class="input-prepend">
                                 <span class="add-on"><i class="icon-key"></i></span>
                                 <input type="password" placeholder="Current Password" name="orgpass" required>
