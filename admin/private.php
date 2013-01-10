@@ -18,17 +18,18 @@
     function get_user_array($username = "") {
         /* Does all of the heavy lifting for getting user stats. returns false if not logged in. */
         $db = new db();
-        if (isset($_SESSION["id"])) {
-            $sid = $_SESSION["id"];
             if ($username == "") {
-                if ($query = $db->prepare("SELECT id, name, status from `users` where id=?")) {
-                    $query->bind_param("i", $sid);
-                    $query->execute();
-                    $query->bind_result($id, $name, $status);
-                    $query->fetch();
-                    $query->close();
-                    $db->close();
-                    return array("name" => $name, "status" => $status, "id" => $id);
+                if (isset($_SESSION["id"])) {
+                    $sid = $_SESSION["id"];
+                    if ($query = $db->prepare("SELECT id, name, status from `users` where id=?")) {
+                        $query->bind_param("i", $sid);
+                        $query->execute();
+                        $query->bind_result($id, $name, $status);
+                        $query->fetch();
+                        $query->close();
+                        $db->close();
+                        return array("name" => $name, "status" => $status, "id" => $id);
+                    } else { return false; }
                 } else { return false; }
             } else {
                 if ($query = $db->prepare("SELECT id, name, passhash, status from `users` where name=?")) {
@@ -70,31 +71,25 @@
     class UserFunctions {
         public static function change($user, $oldpass, $newpass) {
             $db = new db();
-            if ($query = $db->prepare("SELECT id, passhash FROM `users` WHERE name=?")) { 
-                $query->bind_param("s", $user);
-                $query->execute();
-                $query->bind_result($id, $passhash);
-                $query->fetch();
-                $query->close();
-                if ($id == 0) {
-                    die("A not logged in user just tried to change their password. Someone made a boo-boo.");
-                } else {
-                    if (PassHash::compare($oldpass, $passhash)) {
-                        $tmp = PassHash::hash($newpass);
-                        if ($query = $db->query("UPDATE `users` SET `passhash`=? WHERE `name`=?")) {
-                            $query->bind_param("ss", $tmp, $user);
-                            $query->execute();
-                            $query->close();
-                            $db->close();
-                            return true; //success
-                        } else {
-                            $db->close();
-                            return false;
-                        }
+            $user_login = get_user_array($user);
+            if (!$user_login) { 
+                die("A not logged in user just tried to change their password. Someone made a boo-boo.");
+            } else {
+                if (PassHash::compare($oldpass, $user_login["passhash"])) {
+                    $tmp = PassHash::hash($newpass);
+                    if ($query = $db->query("UPDATE `users` SET `passhash`=? WHERE `name`=?")) {
+                        $query->bind_param("ss", $tmp, $user_login["name"]);
+                        $query->execute();
+                        $query->close();
+                        $db->close();
+                        return true; //success
                     } else {
                         $db->close();
-                        return false;//invalid pass
+                        return false;
                     }
+                } else {
+                    $db->close();
+                    return false;//invalid pass
                 }
             }
         }
@@ -103,7 +98,9 @@
             // TODO: something along the lines of making this transferrable to anyone
             $user = get_user_array();
             $user_login = get_user_array($username);
-            if (!$user_login) { return 3; } // no such user
+            if (!$user_login)
+                return 3;
+            
             if ($user) {
                 switch ($user["status"]) {
                 // oh no, he's using session cookies. i'd use something better, but the sniffing vuln is still there. SSL Suggested.
@@ -208,7 +205,6 @@
     }
     
     $user = get_user_array();
-    if (!$user) {
+    if (!$user)
         UserFunctions::logout(); // previously deleted user.
-    }
 ?>
