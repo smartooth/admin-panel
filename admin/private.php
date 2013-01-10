@@ -15,20 +15,32 @@
         }
     }
 
-    function get_user_array() {
+    function get_user_array($username = "") {
         /* Does all of the heavy lifting for getting user stats. returns false if not logged in. */
         $db = new db();
         if (isset($_SESSION["id"])) {
-            $id = $_SESSION["id"];
-            if ($query = $db->prepare("SELECT name, status from `users` where id=?")) {
-                $query->bind_param("i", $id);
-                $query->execute();
-                $query->bind_result($name, $status);
-                $query->fetch();
-                $query->close();
+            $sid = $_SESSION["id"];
+            if ($username == "") {
+                if ($query = $db->prepare("SELECT id, name, status from `users` where id=?")) {
+                    $query->bind_param("i", $sid);
+                    $query->execute();
+                    $query->bind_result($id, $name, $status);
+                    $query->fetch();
+                    $query->close();
+                    $db->close();
+                    return array("name" => $name, "status" => $status, "id" => $id);
+                } else { return false; }
+            } else {
+                if ($query = $db->prepare("SELECT id, name, passhash, status from `users` where name=?")) {
+                    $query->bind_param("s", $username);
+                    $query->execute();
+                    $query->bind_result($id, $name, $passhash, $status);
+                    $query->fetch();
+                    $query->close();
+                    $db->close();
+                    return array("name" => $name, "status" => $status, "id" => $id, "passhash" => $passhash);
+                } else { return false; }
             }
-            $db->close();
-            return array("name" => $name, "status" => $status, "id" => $id);
         } else {
             $db->close();
             return false;
@@ -91,9 +103,9 @@
             // TODO: something along the lines of making this transferrable to anyone
             $user = get_user_array();
             $user_login = get_user_array($username);
-            if (!$user_login) return 3; // no such user
+            if (!$user_login) { return 3; } // no such user
             if ($user) {
-                switch ($user["status"]) { // cheap_error_handling.jpg
+                switch ($user["status"]) {
                 // oh no, he's using session cookies. i'd use something better, but the sniffing vuln is still there. SSL Suggested.
                     case 0:
                         break; // not logged in, but session cookie sent.
