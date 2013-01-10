@@ -2,7 +2,6 @@
     require_once("../private.php");
     $sitestr = ""; $extras = "";
     if (isset($_GET["x"])) { // lazy assumptions for now. TODO
-
     $extras .= <<<EXTRA
                 <div class="alert alert-error">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -13,8 +12,8 @@ EXTRA;
 
     if ((@$_POST["username"]) && (@$_POST["password"])) {
 
-        $user = urldecode($_POST["username"]);
-        $pass = urldecode($_POST["password"]);
+        $user = $_POST["username"];
+        $pass = $_POST["password"];
         switch (UserFunctions::login($user, $pass)) {
             case 1:
                 header("Location: /admin");
