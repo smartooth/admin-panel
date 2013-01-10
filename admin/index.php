@@ -4,7 +4,6 @@
         header("Location: /admin/login");
         die();
     }
-    $db = new db();
     $changelog = new Changelog();
     $changes = $changelog->read_array();
     include("templates/header.php");
@@ -15,9 +14,9 @@
 <?php include("templates/navbar.php"); ?>
         <div class="container-fluid">
             <div class="row-fluid">
-                <div class="span2 visible-desktop">
+                <div class="span2 hidden-phone">
 <?php include("templates/sidebar.php"); ?>
-                </div><!--/span-->
+                </div>
                 <div class="span10">
                     <div class="hero-unit">
                         <table class="table">
