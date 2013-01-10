@@ -15,7 +15,7 @@
         }
     }
 
-    static function get_user_array() {
+    function get_user_array() {
         /* Does all of the heavy lifting for getting user stats. returns false if not logged in. */
         $db = new db();
         if (isset($_SESSION["id"])) {
