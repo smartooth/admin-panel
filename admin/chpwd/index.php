@@ -4,6 +4,7 @@
         header("Location: /admin/login");
         die();
     }
+    
     $message = "";
     if (isset($_POST["orgpass"]) && isset($_POST["newpass1"]) && isset($_POST["newpass"])) {
         if ($_POST["newpass1"] == $_POST["newpass"]) {
@@ -49,7 +50,6 @@ MESSAGE;
                         <p>Change your password here.</p>
 <?= $message ?>
                         <form method="POST">
-                            <input type="hidden" value="1" name="type">
                             <div class="input-prepend">
                                 <span class="add-on"><i class="icon-key"></i></span>
                                 <input type="password" placeholder="Current Password" name="orgpass" required>
