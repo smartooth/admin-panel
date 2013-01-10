@@ -63,6 +63,6 @@
         <!--[if lt IE 9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
-        <script src="/js/jquery-1.8.3.js"></script>
-        <script src="/js/bootstrap.js"></script>
+        <script src="/js/jquery-1.8.3.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
     </head>
