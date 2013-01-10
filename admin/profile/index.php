@@ -1,13 +1,9 @@
 <?php
     require_once("../private.php");
-    if ($_SESSION["status"] != 1) {
+    if ((!$user) || ($user["status"] != 1)) {
         header("Location: /admin/login.php");
         die();
     }
-    $db = new db();
-    $id = $_SESSION["id"];
-    $user = $db->query("SELECT * from `users` where id='{$id}';");
-    $user = $user->fetch_assoc();
     include("../templates/header.php");
     $nav[5] = "active";
 ?>

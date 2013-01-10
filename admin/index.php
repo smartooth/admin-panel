@@ -1,6 +1,6 @@
 <?php
     require_once("private.php");
-    if ($user["status"] != 1) {
+    if ((!$user) || ($user["status"] != 1)) {
         header("Location: /admin/login");
         die();
     }

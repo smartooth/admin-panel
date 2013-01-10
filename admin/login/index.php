@@ -11,7 +11,6 @@ EXTRA;
     }
 
     if ((@$_POST["username"]) && (@$_POST["password"])) {
-
         $user = $_POST["username"];
         $pass = $_POST["password"];
         switch (UserFunctions::login($user, $pass)) {
@@ -36,15 +35,15 @@ EXTRA;
                 die("Login returned a malfunctioned result.");
                 break;
         }
-
     }
 
 
-
-    if (@$user["status"] == 1) {
-        if (DEBUG != True) {
-            header("Location: /admin");
-            die();
+    if ($user) {
+        if ($user["status"] == 1) {
+            if (DEBUG != True) {
+                header("Location: /admin");
+                die();
+            }
         }
     }
     include("../templates/header.php");

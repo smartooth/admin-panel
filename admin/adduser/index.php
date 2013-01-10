@@ -1,14 +1,10 @@
 <?php
     require_once("../private.php");
-    if ($_SESSION["status"] != 1) {
-        header("Location: /admin/login.php");
+    if ((!$user) || ($user["status"] != 1)) {
+        header("Location: /admin/login");
         die();
     }
-    $new_user = FALSE;
-    $db = new db();
-    $id = $_SESSION["id"];
-    $user = $db->query("SELECT * from `users` where id='{$id}';");
-    $user = $user->fetch_assoc(); // and a complete lack of error checking is indeed staring you in the face.
+    $new_user = False;
     if (isset($_POST["user"]) && isset($_POST["pass"])) {
         UserFunctions::create($_POST["user"], $_POST["pass"]);
         $new_user = True;

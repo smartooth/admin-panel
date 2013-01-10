@@ -1,15 +1,10 @@
 <?php
     require_once("../private.php");
-    if ($_SESSION["status"] != 1) {
-        header("Location: /admin/login.php");
+    if ((!$user) || ($user["status"] != 1)) {
+        header("Location: /admin/login");
         die();
     }
     $message = "";
-    $db = new db();
-    $id = $_SESSION["id"];
-    $user = $db->query("SELECT * from `users` where id='{$id}';");
-    $user = $user->fetch_assoc();
-
     if (isset($_POST["orgpass"]) && isset($_POST["newpass1"]) && isset($_POST["newpass"])) {
         if ($_POST["newpass1"] == $_POST["newpass"]) {
             if (UserFunctions::Change($user["name"], $_POST["orgpass"], $_POST["pass"])) {
