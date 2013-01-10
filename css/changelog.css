@@ -1,0 +1,46 @@
+body{
+background:#FBF2D3;
+margin:0;
+padding:0;
+font-family:"Arial Grande",Tahoma,Helvetica,Arial,sans-serif;
+font-size:8pt;
+}
+.changelog-text{
+padding:2px 5px 2px 10px;
+text-align:left;
+background:#fff;
+}
+.changelog-header{
+color:#fff;
+height:24px;
+background-color:#3e408c;
+}
+.major{
+background-color:#fbe6ef;
+font-weight:bold;
+}
+.author{
+color: #8D4848;
+display: inline;
+}
+.container{
+position: relative;
+margin: auto;
+width: 900px;
+}
+h4 {
+color: white;
+font-size: 150%;
+margin: 0;
+padding: 2px 5px 2px 5px;
+line-height: 35px;
+font-weight: normal;
+border-radius: 5px;
+background: #5B5399;
+background-image: linear-gradient(bottom,#5B5399 0%,#7B72CF 100%);
+background-image: -o-linear-gradient(bottom,#5B5399 0%,#7B72CF 100%);
+background-image: -moz-linear-gradient(bottom,#5B5399 0%,#7B72CF 100%);
+background-image: -webkit-linear-gradient(bottom,#5B5399 0%,#7B72CF 100%);
+background-image: -ms-linear-gradient(bottom,#5B5399 0%,#7B72CF 100%);
+background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0,#5B5399),color-stop(1,#7B72CF));
+}
