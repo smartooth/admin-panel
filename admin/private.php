@@ -68,28 +68,24 @@
     }
 
     class UserFunctions {
-        public static function change($user, $oldpass, $newpass) {
+        public static function change($username, $oldpass, $newpass) {
             $db = new db();
-            $user_login = get_user_array($user);
-            if (!$user_login) { 
-                die("A not logged in user just tried to change their password. Someone made a boo-boo.");
-            } else {
-                if (PassHash::compare($oldpass, $user_login["passhash"])) {
-                    $tmp = PassHash::hash($newpass);
-                    if ($query = $db->query("UPDATE `users` SET `passhash`=? WHERE `name`=?")) {
-                        $query->bind_param("ss", $tmp, $user_login["name"]);
-                        $query->execute();
-                        $query->close();
-                        $db->close();
-                        return true; //success
-                    } else {
-                        $db->close();
-                        return false;
-                    }
+            $user_login = get_user_array($username);
+            if (PassHash::compare($oldpass, $user_login["passhash"])) {
+                $tmp = PassHash::hash($newpass);
+                if ($query = $db->prepare("UPDATE users SET passhash=? WHERE name=?")) {
+                    $query->bind_param("ss", $tmp, $user_login["name"]);
+                    $query->execute();
+                    $query->close();
+                    $db->close();
+                    return true; //success
                 } else {
                     $db->close();
-                    return false;//invalid pass
+                    die();
                 }
+            } else {
+                $db->close();
+                return false; //invalid pass
             }
         }
 
@@ -102,7 +98,6 @@
             
             if ($user) {
                 switch ($user["status"]) {
-                // oh no, he's using session cookies. i'd use something better, but the sniffing vuln is still there. SSL Suggested.
                     case 0:
                         break; // not logged in, but session cookie sent.
                     case 1:

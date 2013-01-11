@@ -8,11 +8,13 @@
     $message = "";
     if (isset($_POST["orgpass"]) && isset($_POST["newpass1"]) && isset($_POST["newpass"])) {
         if ($_POST["newpass1"] == $_POST["newpass"]) {
-            if (UserFunctions::Change($user["name"], $_POST["orgpass"], $_POST["pass"])) {
+            $original = urldecode($_POST["orgpass"]);
+            $newpass = urldecode($_POST["newpass"]);
+            if (UserFunctions::change($user["name"], $original, $newpass)) {
                 $message = <<<MESSAGE
                         <div class="alert alert-success">
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            Password Changed Sucessfully.
+                            Password Changed Successfully.
                         </div>
 MESSAGE;
             } else {
