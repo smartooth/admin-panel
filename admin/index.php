@@ -104,7 +104,7 @@
         $class_ = $row["major"] == 1 ? "text-warning" : "";
         $major = $row["major"] == 1 ? " checked" : "";
         $private = $row["private"] == 1 ? " checked" : "";
-        $class_ = $row["private"] == 1 ? "muted" : $class_;
+        $privtext = $row["private"] == 1 ? "<span class=\"muted\">(Private)" : "";
         $comment = htmlspecialchars($row["comment"]);
         $sel = array('','','');
         $sel[$row["type"]] = " selected";
@@ -112,7 +112,7 @@
         echo <<<CHANGE
                     <div class="well">
                         <h4 style="margin: 0" class="{$type}">
-                            {$row["name"]}
+                            {$row["name"]} {$privtext}
                             <span style="float: right">
                                     <i class="icon-pencil text-info lowered-opacity" data-toggle="collapse" data-target=".edit-collapse-{$row["id"]}"></i>
                                  &nbsp; <i class="icon-remove-circle text-error lowered-opacity" data-toggle="collapse" data-target=".delete-collapse-{$row["id"]}"></i>
