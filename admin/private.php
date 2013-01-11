@@ -185,7 +185,7 @@
         }
         public static function read_array($limit = 25) {
             $db = new db();
-            $query = "SELECT `changelog`.*, `users`.`name` FROM `changelog` JOIN `users` ON `changelog`.`authorid` = `users`.`id` WHERE `private` = 0 ORDER BY `changelog`.`date` DESC LIMIT {$limit};";
+            $query = "SELECT `changelog`.*, `users`.`name` FROM `changelog` JOIN `users` ON `changelog`.`authorid` = `users`.`id` ORDER BY `changelog`.`date` DESC LIMIT {$limit};";
             $array = array();
             $res = $db->query($query);
             while($row = $res->fetch_assoc()) { // Input can only be int. It's a waste of space to use a prepared query...

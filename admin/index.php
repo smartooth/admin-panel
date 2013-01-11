@@ -7,11 +7,14 @@
     if (isset($_POST["target"])) {
         switch ($_POST["target"]) {
             case "new":
-                $post_changes = isset($_POST["comment"]) ? $_POST["comment"] : "Malformed Commit";
-                $post_priv = isset($_POST["private"]) ? $_POST["private"] : 0;
-                $post_major = isset($_POST["major"]) ? $_POST["major"] : 0;
-                $post_type = isset($_POST["type"]) ? $_POST["type"] : 0;
-                $post_author = isset($_POST["author"]) ? $_POST["author"] : 0;
+                $post_changes = $_POST["comment"];
+                if ($post_changes == "") {
+                    break;
+                }
+                $post_priv = isset($_POST["private"]) ? 1 : 0;
+                $post_major = isset($_POST["major"]) ? 1 : 0;
+                $post_type = $_POST["type"];
+                $post_author = $_POST["author"];
                 if ($post_author != $user["id"]) {
                     break;
                 }
@@ -71,14 +74,14 @@
                                 <input type="hidden" name="target" value="new">
                                 <input type="hidden" name="author" value="<?= $user["id"] ?>">
                                 <textarea rows="3" name="comment" class="span12" placeholder="Enter commit here"></textarea>
+                                <p>
+                                    <input type="checkbox" name="major" value="1"> Major? 
+                                    <input type="checkbox" name="private" value="1"> Private?
                                 </p>
-                                <input type="checkbox" name="major" value="1"> Major? 
-                                <input type="checkbox" name="private" value="1"> Private?
-                                </p>
-                                <select>
-                                    <option class="text-success" name="type" value="0">Add</option>
-                                    <option class="text-info" name="type" value="1">Fix</option>
-                                    <option class="text-error" name="type" value="2">Del</option>
+                                <select name="type">
+                                    <option class="text-success" value="0">Add</option>
+                                    <option class="text-info" value="1">Fix</option>
+                                    <option class="text-error" value="2">Del</option>
                                 </select>
                                 <br>
                                 <input type="submit" class="btn btn-success" value="Submit">
@@ -89,14 +92,14 @@
 <?php
     foreach ($changes as $row) {
         switch ($row["type"]) {
-        case 0: // add
-            $type = "text-success"; break;
-        case 1: // fix
-            $type = "text-info"; break;
-        case 2: // fix
-            $type = "text-error"; break;
-        default: // the hell?
-            $type = "N/A"; break;
+            case 0: // add
+                $type = "text-success"; break;
+            case 1: // fix
+                $type = "text-info"; break;
+            case 2: // fix
+                $type = "text-error"; break;
+            default: // the hell?
+                $type = "N/A"; break;
         }
         $class_ = $row["major"] == 1 ? "text-warning" : "";
         $major = $row["major"] == 1 ? " checked" : "";
@@ -109,7 +112,7 @@
         echo <<<CHANGE
                     <div class="well">
                         <h4 style="margin: 0" class="{$type}">
-                            By {$row["name"]}
+                            {$row["name"]}
                             <span style="float: right">
                                     <i class="icon-pencil text-info lowered-opacity" data-toggle="collapse" data-target=".edit-collapse-{$row["id"]}"></i>
                                  &nbsp; <i class="icon-remove-circle text-error lowered-opacity" data-toggle="collapse" data-target=".delete-collapse-{$row["id"]}"></i>
@@ -123,7 +126,7 @@
                                 <input type="hidden" name="target" value="edit">
                                 <input type="hidden" name="id" value="{$row["id"]}">
                                 <textarea rows="3" name="comment" class="span12" required>{$comment}</textarea>
-                                </p>
+                                <p>
                                 <input type="checkbox" name="major" value="1"{$major}> Major? 
                                 <input type="checkbox" name="private" value="1"{$private}> Private?
                                 </p>
