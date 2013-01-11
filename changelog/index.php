@@ -1,8 +1,7 @@
 <?php
     require_once("../admin/private.php");
     $title = "Love Despite Changelog";
-    $changelog = new Changelog();
-    $changes = $changelog->read_array();
+    $changes = Changelog::read_array();
     include("../admin/templates/header.php");
 ?>
     <body> 
