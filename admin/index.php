@@ -38,6 +38,7 @@
                                         $post_priv,
                                         $post_major,
                                         $post_type);
+                }
                 break;
             case "delete":
                 if (isset($_POST["id"])) {
