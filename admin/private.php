@@ -1,4 +1,5 @@
 <?php
+    $title = "LD Admin Panel";
     session_start();
     require_once("config.php");
     class db extends mysqli {
