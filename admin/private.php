@@ -150,12 +150,12 @@
         }
     }
     class Changelog {
-        public static function add_change($change, $author, $web, $priv, $major, $type) {
+        public static function add_change($change, $author, $priv, $major, $type) {
             $db = new db();
             $time = date("Y-m-d H:i:s");
-            if ($query = $db->prepare("INSERT INTO `changelog` ( `type`, `comment`, `authorid`, `private`, `web`, `major`, `date` ) " .
+            if ($query = $db->prepare("INSERT INTO `changelog` ( `type`, `comment`, `authorid`, `private`, `major`, `date` ) " .
                 "VALUES ( ?,?,?,?,?,?,?)")) {
-                $query->bind_param("isiiiis", $type, $change, $author, $priv, $web, $major, $time);
+                $query->bind_param("isiiis", $type, $change, $author, $priv, $major, $time);
                 $query->execute();
                 $query->close();
                 $db->close();

@@ -4,6 +4,35 @@
         header("Location: /admin/login");
         die();
     }
+    if (isset($_POST["target"])) {
+        switch ($_POST["target"]) {
+            case "new":
+                $post_changes = isset($_POST["comment"]) ? $_POST["comment"] : "Malformed Commit";
+                $post_priv = isset($_POST["private"]) ? $_POST["private"] : 0;
+                $post_major = isset($_POST["major"]) ? $_POST["major"] : 0;
+                $post_type = isset($_POST["type"]) ? $_POST["type"] : 0;
+                $post_author = isset($_POST["author"]) ? $_POST["author"] : 0;
+                if ($post_author != $user["id"]) {
+                    break;
+                }
+                Changelog::add_change(
+                                    $post_changes,
+                                    $post_author,
+                                    $post_priv,
+                                    $post_major,
+                                    $post_type);
+                break;
+            case "edit":
+                break;
+            case "delete":
+                if (isset($_POST["id"])) {
+                    Changelog::delete_change($_POST["id"]);
+                }
+                break;
+            default:
+                break;
+        }
+    }
     $changelog = new Changelog();
     $changes = $changelog->read_array();
     include("templates/header.php");
@@ -24,7 +53,7 @@
                             <hr>
                             <form method="POST">
                                 <input type="hidden" name="target" value="new">
-                                <input type="hidden" name="author" value="<?= $user["name"] ?>">
+                                <input type="hidden" name="author" value="<?= $user["id"] ?>">
                                 <textarea rows="3" name="comment" class="span12" placeholder="Enter commit here"></textarea>
                                 </p>
                                 <input type="checkbox" name="major" value="1"> Major? 
