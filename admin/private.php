@@ -165,42 +165,24 @@
                 return false; // not likely to happen, but /shrug (db() Would have already errored)
             }
         }
-        public static function changes ( $limit = 200 ) {
-            // TODO: Change this to not look so messy.
+        public static function delete_change($id) {
             $db = new db();
-            $query = "SELECT `changelog`.*, `users`.`name` FROM `changelog` JOIN `users` ON `changelog`.`authorid` = `users`.`id` WHERE `private` = 0 ORDER BY `changelog`.`date` DESC LIMIT {$limit};";
-            $y = $db->query($query);
-            $i = 0; $final = '';
-            //echo $y->num_rows;
-            for ($i = 0; $i < $y->num_rows; $i++) {
-                $x = $y->fetch_assoc();
-                if ($x["private"] == 1)
-                    continue;
-                $final .= "\t";
-                $final .= "<div class=\"changelog-text\">";
-                $tmp = strtotime($x["date"]); $final .= date("dS M, Y", $tmp) . " ";
-                switch ($x["type"]) {
-                  case 0: // add
-                    $final .= "<img src=\"../img/add.png\">";
-                    break;
-                  case 1: // fix
-                    $final .= "<img src=\"../img/fix.png\">";
-                    break;
-                  case 2: // del
-                    $final .= "<img src=\"../img/del.png\">";
-                    break;
-                  default:
-                    die('Error in $x[\"type\"] in Changelog::changes();');
-                    break;
-                }
-                if ($x["web"] == 1) { $final .= " <img src=\"../img/web.png\">"; }
-                if ($x["major"] == 1) { $final .= " <img src=\"../img/major.png\">"; }
-                $final .= " [<div class=\"author\">{$x["name"]}</div>] ";
-                $final .= $x["comment"] . "</div>\n";
+            if ($query = $db->prepare("DELETE FROM changelog WHERE id=?")) {
+                $query->bind_param("i", $id);
+                $query->execute();
+                $query->close();
             }
-            return $final;
+            $db->close();
         }
-        // ^ messy. ew.
+        public static function edit_change($id, $comment, $private, $major, $type) {
+            $db = new db();
+            if ($query = $db->prepare("UPDATE changelog SET comment=?, private=?, major=?, type=? WHERE id=?")) {
+                $query->bind_param("siiii", $comment, $private, $major, $type, $id);
+                $query->execute();
+                $query->close();
+            }
+            $db->close();
+        }
         public static function read_array($limit = 25) {
             $db = new db();
             $query = "SELECT `changelog`.*, `users`.`name` FROM `changelog` JOIN `users` ON `changelog`.`authorid` = `users`.`id` WHERE `private` = 0 ORDER BY `changelog`.`date` DESC LIMIT {$limit};";

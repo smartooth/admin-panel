@@ -23,6 +23,21 @@
                                     $post_type);
                 break;
             case "edit":
+                $post_id = isset($_POST["id"]) ? $_POST["id"] : False;
+                $post_changes = isset($_POST["comment"]) ? $_POST["comment"] : False;
+                if (!$post_changes) {
+                    break;
+                }
+                $post_priv = isset($_POST["private"]) ? $_POST["private"] : 0;
+                $post_major = isset($_POST["major"]) ? $_POST["major"] : 0;
+                $post_type = isset($_POST["type"]) ? $_POST["type"] : 0;
+                if ($post_id) {
+                    Changelog::edit_change(
+                                        $post_id,
+                                        $post_changes,
+                                        $post_priv,
+                                        $post_major,
+                                        $post_type);
                 break;
             case "delete":
                 if (isset($_POST["id"])) {
