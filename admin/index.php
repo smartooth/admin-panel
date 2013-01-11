@@ -22,19 +22,19 @@
     foreach ($changes as $row) {
         switch ($row["type"]) {
         case 0: // add
-            $type = "Added"; break;
+            $type = "text-success"; break;
         case 1: // fix
-            $type = "Fixed"; break;
+            $type = "text-info"; break;
         case 2: // fix
-            $type = "Deleted"; break;
+            $type = "text-error"; break;
         default: // the hell?
             $type = "N/A"; break;
         }
-        $class_ = $row["major"] == 1 ? "text-error" : "";
-        $class_ = $row["private"] == 1 ? "text-info" : $class_;
+        $class_ = $row["major"] == 1 ? "text-warning" : "";
+        $class_ = $row["private"] == 1 ? "muted" : $class_;
         echo <<<CHANGE
                     <div class="well">
-                        <h4 style="margin: 0">{$row["name"]} - {$type} <span style="float: right"><i class="icon-pencil"></i> &nbsp; <i class="icon-remove-circle"></i></span></h4>
+                        <h4 style="margin: 0" class="{$type}">By {$row["name"]} <span style="float: right"><i class="icon-pencil"></i> &nbsp; <i class="icon-remove-circle"></i></span></h4>
                         <small>{$row["date"]}</small>
                         <p class="{$class_}" style="margin: 0">{$row["comment"]}</p>
                     </div>
