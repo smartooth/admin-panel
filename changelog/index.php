@@ -54,7 +54,7 @@
             $type = "N/A"; break;
         }
         $class_ = $row["major"] == 1 ? "text-warning" : "";
-        $class_ = $row["private"] == 1 ? "muted" : $class_;
+        if ($row["private"] == 1) { continue; }
         $comment = htmlspecialchars($row["comment"]);
         echo <<<CHANGE
                     <div class="well">
