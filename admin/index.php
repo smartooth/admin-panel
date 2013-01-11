@@ -18,6 +18,29 @@
 <?php include("templates/sidebar.php"); ?>
                 </div>
                 <div class="span10">
+                    <div class="well">
+                        <h4 style="text-align: center; margin: 0;" class="text-success lowered-opacity" data-toggle="collapse" data-target=".new-commit-collapse">New Commit</h4>
+                        <div class="new-commit-collapse collapse">
+                            <hr>
+                            <form method="POST">
+                                <input type="hidden" name="target" value="new">
+                                <input type="hidden" name="author" value="<?= $user["name"] ?>">
+                                <textarea rows="3" name="comment" class="span12" placeholder="Enter commit here"></textarea>
+                                </p>
+                                <input type="checkbox" name="major" value="1"> Major? 
+                                <input type="checkbox" name="private" value="1"> Private?
+                                </p>
+                                <select>
+                                    <option class="text-success" name="type" value="0">Add</option>
+                                    <option class="text-info" name="type" value="1">Fix</option>
+                                    <option class="text-error" name="type" value="2">Del</option>
+                                </select>
+                                <br>
+                                <input type="submit" class="btn btn-success" value="Submit">
+                                <a class="btn" data-toggle="collapse" data-target=".new-commit-collapse">Cancel</a>
+                            </form>
+                        </div>
+                    </div>
 <?php
     foreach ($changes as $row) {
         switch ($row["type"]) {
@@ -37,6 +60,7 @@
         $comment = htmlspecialchars($row["comment"]);
         $sel = array('','','');
         $sel[$row["type"]] = " selected";
+
         echo <<<CHANGE
                     <div class="well">
                         <h4 style="margin: 0" class="{$type}">
@@ -51,6 +75,7 @@
                         <div class="edit-collapse-{$row["id"]} collapse">
                             <hr>
                             <form method="POST">
+                                <input type="hidden" name="target" value="edit">
                                 <input type="hidden" name="id" value="{$row["id"]}">
                                 <textarea rows="3" name="comment" class="span12" required>{$comment}</textarea>
                                 </p>
@@ -70,13 +95,15 @@
                         <div class="delete-collapse-{$row["id"]} collapse">
                             <hr>
                             <form method="POST">
-                                <input type="hidden" name="delete" value="{$row["id"]}">
+                                <input type="hidden" name="target" value="delete">
+                                <input type="hidden" name="id" value="{$row["id"]}">
                                 <p class="text-warn">Are you sure you want to delete this?</p>
                                 <input class="btn btn-danger" type="submit" value="Yes">
                                 <a class="btn" data-toggle="collapse" data-target=".delete-collapse-{$row["id"]}">No</a>
                             </form>
                         </div>
                     </div>
+
 CHANGE;
         }
 ?>
