@@ -54,11 +54,12 @@
         }
         $class_ = $row["major"] == 1 ? "text-warning" : "";
         $class_ = $row["private"] == 1 ? "muted" : $class_;
+        $comment = htmlspecialchars($row["comment"]);
         echo <<<CHANGE
                     <div class="well">
                         <h4 style="margin: 0" class="{$type}">By {$row["name"]}</h4>
                         <small>{$row["date"]}</small>
-                        <p class="{$class_}" style="margin: 0">{$row["comment"]}</p>
+                        <p class="{$class_}" style="margin: 0">{$comment}</p>
                     </div>
 CHANGE;
         }

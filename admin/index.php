@@ -31,12 +31,39 @@
             $type = "N/A"; break;
         }
         $class_ = $row["major"] == 1 ? "text-warning" : "";
+        $major = $row["major"] == 1 ? " checked" : "";
+        $private = $row["private"] == 1 ? " checked" : "";
         $class_ = $row["private"] == 1 ? "muted" : $class_;
+        $comment = htmlspecialchars($row["comment"]);
         echo <<<CHANGE
                     <div class="well">
-                        <h4 style="margin: 0" class="{$type}">By {$row["name"]} <span style="float: right"><i class="icon-pencil"></i> &nbsp; <i class="icon-remove-circle"></i></span></h4>
+                        <h4 style="margin: 0" class="{$type}">
+                            By {$row["name"]}
+                            <span style="float: right">
+                                    <i class="icon-pencil text-info" data-toggle="collapse" data-target=".edit-collapse-{$row["id"]}"></i>
+                                 &nbsp; <i class="icon-remove-circle text-error" data-toggle="collapse" data-target=".delete-collapse-{$row["id"]}"></i>
+                            </span>
+                        </h4>
                         <small>{$row["date"]}</small>
-                        <p class="{$class_}" style="margin: 0">{$row["comment"]}</p>
+                        <p class="{$class_}" style="margin: 0">{$comment}</p>
+                        <div class="edit-collapse-{$row["id"]} collapse">
+                            <hr>
+                            <form method="POST">
+                                <input type="hidden" name="id" value="{$row["id"]}">
+                                <textarea rows="3" name="comment" class="span12" required>{$comment}</textarea>
+                                <input type="checkbox" name="major" value="1"{$major}> Major? 
+                                <input type="checkbox" name="private" value="1"{$private}> Private? 
+                            </form>
+                        </div>
+                        <div class="delete-collapse-{$row["id"]} collapse">
+                            <hr>
+                            <form method="POST">
+                                <input type="hidden" name="delete" value="{$row["id"]}">
+                                Are you sure you want to delete this?
+                                <input class="btn btn-danger" type="submit" value="Yes">
+                                <a class="btn" data-toggle="collapse" data-target=".delete-collapse-{$row["id"]}">No</a>
+                            </form>
+                        </div>
                     </div>
 CHANGE;
         }

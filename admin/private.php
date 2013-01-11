@@ -130,7 +130,7 @@
             session_destroy();
             $db = new db();
             if ($query = $db->prepare("UPDATE users SET status=0 WHERE id=?")) {
-                $query->bind_param("i", @$_SESSION["id"]);
+                $query->bind_param("i", $_SESSION["id"]);
                 $query->execute();
                 $query->close();
             } // if this fails, we have a problem. TODO: add logging
