@@ -1,18 +1,71 @@
 <?php
     require_once("../admin/private.php");
-    $changes = Changelog::changes();
+    $changelog = new Changelog();
+    $changes = $changelog->read_array();
+    include("../admin/templates/header.php");
 ?>
-<html>
-    <head>
-        <link rel="stylesheet" href="/css/changelog.css" type="text/css" />
-        <title>Love Despite Changelog</title>
-        <meta http-equiv="Content-Type: text/html; charset=utf-8" />
-        <!-- todo: add jquery, ajax + JSONP requests -->
-    </head>
-    <body>
-        <div class="container">
-            <h4>This is the public Changelog for Love Despite. Game updates, as well as site updates will be posted here as they are done. PS: Work in Progress, still.</h4>
-<?= $changes ?>
+    <body> 
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="#">Love Despite Changelog<i class="icon-wrench"></i></a>
+                    <div class="nav-collapse collapse">
+                        <div class="nav visible-phone">
+                            <p style="padding: 5px; margin: 2px;" class="nav-header">Legend</p>
+                            <p style="padding: 5px; margin: 2px;" class="text-success">Green is an added feature</p>
+                            <p style="padding: 5px; margin: 2px;" class="text-info">Blue is a fixed bug</p>
+                            <p style="padding: 5px; margin: 2px;" class="text-error">Red is a deleted feature</p>
+                            <p style="padding: 5px; margin: 2px;" class="text-warning">Golden comment text is a major update </p>
+                        </div>
+                        <p class="navbar-text pull-right">
+                            <a href="https://github.com/HirotoKun/admin-panel" class="navbar-link">View Source on Github</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>    
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span2 hidden-phone">
+                    <div class="well">
+                        <p class="text-success">Green is an added feature</p>
+                        <p class="text-info">Blue is a fixed bug</p>
+                        <p class="text-error">Red is a deleted feature</p>
+                        <p class="text-warning">Golden comment text is a major update</p>
+                    </div>
+                </div>
+                <div class="span10">
+<?php
+    foreach ($changes as $row) {
+        switch ($row["type"]) {
+        case 0: // add
+            $type = "text-success"; break;
+        case 1: // fix
+            $type = "text-info"; break;
+        case 2: // fix
+            $type = "text-error"; break;
+        default: // the hell?
+            $type = "N/A"; break;
+        }
+        $class_ = $row["major"] == 1 ? "text-warning" : "";
+        $class_ = $row["private"] == 1 ? "muted" : $class_;
+        echo <<<CHANGE
+                    <div class="well">
+                        <h4 style="margin: 0" class="{$type}">By {$row["name"]}</h4>
+                        <small>{$row["date"]}</small>
+                        <p class="{$class_}" style="margin: 0">{$row["comment"]}</p>
+                    </div>
+CHANGE;
+        }
+?>
+                </div>
+            </div>
+        <hr>
         </div>
     </body>
 </html>
