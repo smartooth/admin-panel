@@ -40,8 +40,8 @@
                         <h4 style="margin: 0" class="{$type}">
                             By {$row["name"]}
                             <span style="float: right">
-                                    <i class="icon-pencil text-info" data-toggle="collapse" data-target=".edit-collapse-{$row["id"]}"></i>
-                                 &nbsp; <i class="icon-remove-circle text-error" data-toggle="collapse" data-target=".delete-collapse-{$row["id"]}"></i>
+                                    <i class="icon-pencil text-info lowered-opacity" data-toggle="collapse" data-target=".edit-collapse-{$row["id"]}"></i>
+                                 &nbsp; <i class="icon-remove-circle text-error lowered-opacity" data-toggle="collapse" data-target=".delete-collapse-{$row["id"]}"></i>
                             </span>
                         </h4>
                         <small>{$row["date"]}</small>

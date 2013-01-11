@@ -61,6 +61,12 @@
             a:hover .no-hover-line {
                 text-decoration: none;
             }
+            .lowered-opacity {
+                opacity: 0.6;
+            }
+            .lowered-opacity:hover {
+                opacity: 1;
+            }
         </style>
         <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
