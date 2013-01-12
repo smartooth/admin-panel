@@ -15,6 +15,25 @@
     }
     $twitter_ = $db->query("SELECT * FROM twitter WHERE username='LoveDespite';");
     $twitter_array = $twitter_->fetch_assoc();
+    
+    // block for $_POST here
+    
+    if (isset($_POST["target"])) {
+        switch ($_POST["target"]) {
+            case "twitter_edit":
+                break;
+            case "user_add":
+                break;
+            case "user_del":
+                break;
+            case "user_edit":
+                break;
+            case default:
+                break;
+        }
+    }
+    
+    
 ?>
     <body>
 <?php include("../templates/navbar.php"); ?>
@@ -39,16 +58,14 @@
                         </div>
                         <div class="twitter-edit-collapse collapse">
                             <hr>
-
-                                <form method="POST">
-                                    <div class="span12">
-                                        <input type="text" placeholder="Access Token" name="token">
-                                        <br>
-                                        <input type="text" placeholder="Access Secret" name="secret">
-                                    </div>
-                                    <input type="submit" class="btn btn-info" value="Change Token Details">
-                                    <a class="btn" data-toggle="collapse" data-target=".twitter-edit-collapse">Cancel</a>
-                                </form>
+                            <form method="POST">
+                                <input type="hidden" name="target" value="twitter_edit">
+                                <input type="text" placeholder="Access Token" name="token">
+                                <br>
+                                <input type="text" placeholder="Access Secret" name="secret">
+                                <input type="submit" class="btn btn-info" value="Change Token Details">
+                                <a class="btn" data-toggle="collapse" data-target=".twitter-edit-collapse">Cancel</a>
+                            </form>
                         </div>
                         <hr>
                         <h3 class="text-success">Users
