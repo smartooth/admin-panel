@@ -2,10 +2,8 @@
     $title = "LD Admin Panel";
     session_start();
     require_once("config.php");
-    require_once("twitter-async/EpiCurl.php");
-    require_once("twitter-async/EpiOAuth.php");
-    require_once("twitter-async/EpiTwitter.php");
-    $twitter = new EpiTwitter(CONSUMER_KEY, CONSUMER_SECRET);
+    require_once("twitteroauth/twitteroauth.php");
+    $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
     class db extends mysqli {
         public function __construct($a = DB_HOST,
                                     $b = DB_USER,
