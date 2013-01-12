@@ -16,7 +16,6 @@
                             <li class="<?= @$nav[6] ?>"><a href="/admin/logout" class="navbar-link">Log out</a></li>
                             <li class="nav-header">Edit Users</li>
                             <li class="<?= @$nav[7] ?>"><a href="/admin/users" class="navbar-link">View</a></li>
-                            <li class="<?= @$nav[8] ?>"><a href="/admin/adduser" class="navbar-link">Add</a></li>
                         </ul>
                         <span class="nav visible-tablet">
                             <span class="nav-header">Quick Links</span> <a href="/admin"><i class="icon-home"></i> Home</a> | <a href="/admin/logout"><i class="icon-signout"></i> Log Out</a></span>
