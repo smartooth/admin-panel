@@ -20,7 +20,16 @@
     
     if (isset($_POST["target"])) {
         switch ($_POST["target"]) {
+            $db = new db();
             case "twitter_edit":
+                if ((isset($_POST["token"])) && (isset($_POST["secret"])) {
+                    if ($query = $db->prepare("UPDATE twitter SET token=?, secret=? WHERE username='LoveDespite'")) {
+                        $query->bind_param("ss", $_POST["token"], $_POST["secret"]);
+                        $query->execute();
+                        $query->close();
+                    }
+                    $db->close();
+                }
                 break;
             case "user_add":
                 break;
@@ -28,7 +37,8 @@
                 break;
             case "user_edit":
                 break;
-            case default:
+            default:
+                $db->close();
                 break;
         }
     }
@@ -40,7 +50,7 @@
         <div class="container-fluid">
             <div class="row-fluid">
                 <div class="span2 hidden-phone">
-                <?php include("../templates/sidebar.php"); ?>
+<?php include("../templates/sidebar.php"); ?>
                 </div>
                 <div class="span10">
                     <div class="well">
@@ -48,7 +58,7 @@
                         <span style="float: right">
                             <span class="lowered-opacity" data-toggle="collapse" data-target=".twitter-collapse"><i class="icon-twitter"></i> </span>
                             <span class="lowered-opacity" data-toggle="collapse" data-target=".twitter-edit-collapse"><i class="icon-pencil"></i></span>
-                            </span>
+                        </span>
                         </h4>
                         <div class="twitter-collapse collapse">
                             <hr>
