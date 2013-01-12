@@ -13,24 +13,8 @@
     while ($row = $rows->fetch_assoc()) {
         array_push($users, $row);
     }
-    $twitter_ = $db->query("SELECT * FROM twitter");
-    while ($row_ = $twitter_->fetch_assoc()) {
-        array_push($twitters, $row_);
-    }
-    $dropdown = <<<DROPDOWN
-                                        <div class="btn-group">
-                                            <a class="btn btn-warning" href="#"><i class="icon-user"></i>  Edit</a>
-                                            <a class="btn btn-warning dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
-                                            <ul class="dropdown-menu">
-                                                <li><a><i class="icon-pencil"></i> Change Password</a></li>
-                                                <li><a><i class="icon-trash"></i> Delete</a></li>
-                                                <li><a><i class="icon-ban-circle"></i> Ban</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="#"><i class="i"></i> Make admin</a></li>
-                                            </ul>
-                                        </div>
-DROPDOWN;
-
+    $twitter_ = $db->query("SELECT * FROM twitter WHERE username='LoveDespite';");
+    $twitter_array = $twitter_->fetch_assoc();
 ?>
     <body>
 <?php include("../templates/navbar.php"); ?>
@@ -41,26 +25,54 @@ DROPDOWN;
                 </div>
                 <div class="span10">
                     <div class="well">
-                        <h3 style="text-align: center;" class="text-error" data-toggle="collapse" data-target=".twitter-collapse">Twitter</h4>
+                        <h3 class="text-info">Twitter 
+                        <span style="float: right">
+                            <span class="lowered-opacity" data-toggle="collapse" data-target=".twitter-collapse"><i class="icon-twitter"></i> </span>
+                            <span class="lowered-opacity" data-toggle="collapse" data-target=".twitter-edit-collapse"><i class="icon-pencil"></i></span>
+                            </span>
+                        </h4>
                         <div class="twitter-collapse collapse">
                             <hr>
-                            <a href="<?= $twitter->getAuthorizationUrl(); ?>"><h3 style="text-align: center;" class="text-info" data-toggle="collapse" data-target=".twitter-collapse">Add Twitter <i class="icon-twitter"></i></h4></a>
-<?php
-    foreach ($twitters as $tw) {
-        $active = $tw["active"] ? " (Active)" : "";
-        echo <<<TW
+                            <h4 class="text-info">@<?= $twitter_array["username"] ?></h4>
+                            <p>Token: <span class="text-warning"><?= $twitter_array["token"] ?></span></p>
+                            <p>Secret: <span class="text-warning"><?= $twitter_array["secret"] ?></span></p>
+                        </div>
+                        <div class="twitter-edit-collapse collapse">
                             <hr>
-                            <h4 class="text-info">@{$tw["username"]}{$active}</h4>
-                            <p>Token: <span class="text-warning">{$tw["token"]}</span></p>
-                            <p>Secret: <span class="text-warning">{$tw["secret"]}</span></p>
-                            
-TW;
-    }
-?>
+
+                                <form method="POST">
+                                    <div class="span12">
+                                        <input type="text" placeholder="Access Token" name="token">
+                                        <br>
+                                        <input type="text" placeholder="Access Secret" name="secret">
+                                    </div>
+                                    <input type="submit" class="btn btn-info" value="Change Token Details">
+                                    <a class="btn" data-toggle="collapse" data-target=".twitter-edit-collapse">Cancel</a>
+                                </form>
                         </div>
                         <hr>
-                        <h3 style="text-align: center;" class="text-success" data-toggle="collapse" data-target=".users-collapse">Users</h4>
-                        <div class="users-collapse collapse">
+                        <h3 class="text-success">Users
+                            <span style="float: right"><span class="lowered-opacity" data-toggle="collapse" data-target=".users-add-collapse"><i class="icon-plus"></i> </span>
+                            <span class="lowered-opacity" data-toggle="collapse" data-target=".users-view-collapse"><i class="icon-eye-open"></i> </span></span>
+                        </h3>
+                        <div class="users-add-collapse collapse">
+                            <hr>
+                            <h4 class="text-success">Add a new user</h4>
+                            <form method="POST">
+                                <input type="hidden" name="target" value="add_user">
+                                <div class="input-prepend">
+                                    <span class="add-on"><i class="icon-user"></i></span>
+                                    <input type="text" placeholder="Username" name="user">
+                                </div>
+                                <div class="input-prepend">
+                                    <span class="add-on"><i class="icon-key"></i></span>
+                                    <input type="password" placeholder="Password" name="pass">
+                                </div>
+                                <br>
+                                <input type="submit" class="btn btn-success" value="Add New User">
+                            </form>
+                        </div>
+                        <div class="users-view-collapse collapse">
 <?php
     foreach ($users as $u) {
         //$admin = $u["admin"] == 1 ? "<span class="warning"> <i class="icon-wrench"></i> (Admin)</span>" : "";
@@ -80,12 +92,31 @@ TW;
         }
         echo <<<USER
                             <hr>
-                            <h4 class="text-success">{$u["name"]}</h4>
+                            <h4 class="text-success">{$u["name"]}
+                            <span style="float: right" class="lowered-opacity" data-toggle="collapse" data-target=".user-edit-{$u["id"]}"><i class="icon-pencil"></i></span></h4>
                             <p>Status: <span class="text-warning">{$status}</span></p>
-                            <form method="POST">
-                                <input type="hidden" name="id" value="{$u["id"]}">
-                                {$dropdown}
-                            </form>
+                            <div class="user-edit-{$u["id"]} collapse">
+                                <hr>
+                                <form method="POST">
+                                    <input type="hidden" name="target" value="edit_user">
+                                    <input type="hidden" value="{$u["id"]}" name="id">
+                                    <div class="input-prepend">
+                                        <span class="add-on"><i class="icon-user"></i></span>
+                                        <input type="text" placeholder="New Username" name="user">
+                                    </div>
+                                    <div class="input-prepend">
+                                        <span class="add-on"><i class="icon-key"></i></span>
+                                        <input type="password" placeholder="New Password" name="pass">
+                                    </div>
+                                    <div class="input-prepend">
+                                        <span class="add-on"><i class="icon-key"></i></span>
+                                        <input type="password" placeholder="Repeat Password" name="pass_repeat">
+                                    </div>
+                                    <br>
+                                    <input type="submit" class="btn btn-warning" value="Edit">
+                                    <a class="btn" data-toggle="collapse" data-target=".user-edit-{$u["id"]}">Cancel</a>
+                                </form>
+                            </div>
 USER;
     }
 ?>

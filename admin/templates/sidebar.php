@@ -7,6 +7,5 @@
                         <li class="<?= @$nav[6] ?>"><a href="/admin/logout"><i class="icon-signout"></i> Log out</a></li>
                         <li class="nav-header">Edit Users</li>
                         <li class="<?= @$nav[7] ?>"><a href="/admin/users"><i class="icon-eye-open"></i> View</a></li>
-                        <li class="<?= @$nav[8] ?>"><a href="/admin/adduser"><i class="icon-plus"></i> Add</a></li>
                     </ul>
                 </div>
