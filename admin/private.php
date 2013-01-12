@@ -3,7 +3,6 @@
     session_start();
     require_once("config.php");
     require_once("twitteroauth/twitteroauth.php");
-    $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
     class db extends mysqli {
         public function __construct($a = DB_HOST,
                                     $b = DB_USER,
@@ -191,7 +190,39 @@
             return $array;
         }
     }
-    
+    function twitter_announce($changes, $type, $author) {
+        // TODO: return false if no twitter account or if not valid
+        $db = new db();
+        $details = $db->query("SELECT * FROM twitter WHERE username='LoveDespite'");
+        $details = $details->fetch_assoc();
+        $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET,
+                                    $details["token"], $details["secret"]);
+        switch ($type) {
+            case 0:
+                $tmp_type = "[ADD]";
+                break;
+            case 1:
+                $tmp_type = "[FIX]";
+                break;
+            case 2:
+                $tmp_type = "[DEL]";
+                break;
+            default:
+                $tmp_type = "";
+                break;
+        }
+        $changes = preg_replace("(<.*>)", "", $changes);
+        // [FIX] (.*) -author
+        $len = strlen($author) + 8; // 5 = the above + spacing
+        if (strlen($changes) > (140 - $len)) {
+            $changes = substr($changes, 0, ((140 - $len) - 3)) . "...";
+        }
+        $status_update = $tmp_type . " " . $changes . " -" . $author;
+        //echo $status_update;
+        //print_r($details);
+        $twitter->post('statuses/update', array('status' => $status_update));
+        return;
+    }
     $user = get_user_array();
     if (!$user) {
         UserFunctions::logout(); // previously deleted user.

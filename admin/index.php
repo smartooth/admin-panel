@@ -18,6 +18,9 @@
                 if ($post_author != $user["id"]) {
                     break;
                 }
+                if ($post_priv == 0) {
+                    twitter_announce($post_changes, $post_type, $user["name"]);
+                }
                 Changelog::add_change(
                                     $post_changes,
                                     $post_author,
