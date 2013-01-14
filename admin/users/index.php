@@ -32,6 +32,10 @@
                 }
                 break;
             case "user_add":
+                if (isset($_POST["user"]) && isset($_POST["pass"])) {
+                    // TODO: check for existing users
+                    UserFunctions::create($_POST["user"], $_POST["pass"]);
+                }
                 break;
             case "user_del":
                 break;
