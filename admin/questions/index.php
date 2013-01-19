@@ -39,7 +39,7 @@ $nav[8] = "active";
 <?php
     foreach ($questions as $row) {
         $char = $row['char'];
-        $question = nl2br($row['question']);
+        $question = nl2br(htmlspecialchars($row['question']), false);
         $name = empty($row['name']) ? "<em>Anonymous</em>" : $row['name'];
         $date = $row['datetime'];
         $ip = $row['ipaddress'];
