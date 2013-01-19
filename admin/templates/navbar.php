@@ -11,6 +11,8 @@
                         <ul class="nav visible-phone">
                             <li class="nav-header">Changelog</li>
                             <li class="<?= @$nav[0] ?>"><a href="/admin" class="navbar-link">Home</a></li>
+                            <li class="nav-header">Character Questions</li>
+                            <li class="<?= @$nav[8] ?>"><a href="/admin/questions"><i class="icon-eye-open"></i>View</a></li>
                             <li class="nav-header">Profile</li>
                             <li class="<?= @$nav[4] ?>"><a href="/admin/chpwd" class="navbar-link">Change Password</a></li>
                             <li class="<?= @$nav[6] ?>"><a href="/admin/logout" class="navbar-link">Log out</a></li>

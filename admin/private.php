@@ -190,6 +190,33 @@
             return $array;
         }
     }
+
+    class CharQuestions {
+        public static function get_chars() {
+            $db = new db();
+            $query = "SELECT `id`, `name`, (SELECT COUNT(*) FROM questions q WHERE q.character_id = c.id) AS 'count' FROM `characters` c ORDER BY `name`";
+            $array = array();
+            $res = $db->query($query);
+            while ($row = $res->fetch_assoc()) {
+                array_push($array, $row);
+            }
+            $db->close();
+            return $array;
+        }
+
+        public static function get_questions() {
+            $db = new db();
+            $query = "SELECT q.name AS 'name', q.question, q.datetime, q.ipaddress, q.character_id, c.name AS 'char' FROM questions q LEFT JOIN characters c ON c.id = q.character_id ORDER BY q.datetime DESC";
+            $array = array();
+            $res = $db->query($query);
+            while ($row = $res->fetch_assoc()) {
+                array_push($array, $row);
+            }
+            $db->close();
+            return $array;
+        }
+    }
+
     function twitter_announce($changes, $type, $author) {
         // TODO: return false if no twitter account or if not valid
         $db = new db();
