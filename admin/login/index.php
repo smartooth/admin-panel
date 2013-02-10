@@ -77,12 +77,23 @@ EXTRA;
                 </div>
                 <div class="input-prepend">
                     <span class="add-on"><i class="icon-key"></i></span>
-                    <input type="password" class="input-block-level" placeholder="Password" name="password">
+                    <input id="pass-toggle" type="password" class="input-block-level" placeholder="Password" name="password">
                 </div>
-                <br>
+                <input id="pass-check" type="checkbox"> Show Password?
+                <input type="checkbox" name="remember"> Remember Me?
+                <hr>
                 <button class="btn btn-large btn-primary" type="submit">Sign in</button>
             </form>
         </div> 
         <hr>
     </body>
+    <script>
+        $("#pass-check").change(function() {
+            if ($("#pass-check").is(":checked")) {
+                $("#pass-toggle").get(0).type = "text"; // show password
+            } else {
+                $("#pass-toggle").get(0).type = "password"; // hide it
+            }
+        });
+    </script>
 </html>
