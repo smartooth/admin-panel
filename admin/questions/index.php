@@ -72,4 +72,25 @@ QUESTION;
             <hr />
         </div>
     </body>
+    <script type="text/javascript">
+    //<!--
+    $(function () {
+        $('#filter').change(function() {
+            var val = $('option:selected', this).val();
+
+            $('#questions .well').each(function() {
+                if (val == 0) {
+                    $(this).removeClass('hidden');
+                } else {
+                    if ($(this).hasClass('char-' + val)) {
+                        $(this).removeClass('hidden');
+                    } else {
+                        $(this).addClass('hidden');
+                    }
+                }
+            });
+        });
+    });
+    //-->
+    </script>
 </html>

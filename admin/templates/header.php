@@ -77,25 +77,4 @@
         <![endif]-->
         <script src="/js/jquery-1.8.3.min.js"></script>
         <script src="/js/bootstrap.min.js"></script>
-        <script type="text/javascript">
-        <!--
-        $(function () {
-            $('#filter').change(function() {
-                var val = $('option:selected', this).val();
-
-                $('#questions .well').each(function() {
-                    if (val == 0) {
-                        $(this).removeClass('hidden');
-                    } else {
-                        if ($(this).hasClass('char-' + val)) {
-                            $(this).removeClass('hidden');
-                        } else {
-                            $(this).addClass('hidden');
-                        }
-                    }
-                });
-            });
-        });
-        -->
-        </script>
     </head>
