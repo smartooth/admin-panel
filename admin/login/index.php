@@ -79,21 +79,21 @@ EXTRA;
                     <span class="add-on"><i class="icon-key"></i></span>
                     <input id="pass-toggle" type="password" class="input-block-level" placeholder="Password" name="password">
                 </div>
-                <input id="pass-check" type="checkbox"> Show Password?
                 <input type="checkbox" name="remember"> Remember Me?
                 <hr>
-                <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+                <button class="btn btn-large btn-primary" type="submit" style="width:40%">Sign in</button>
+                <button id="pass-check" class="btn btn-large" style="width:50%">Show Pass</button>
             </form>
         </div> 
         <hr>
     </body>
     <script>
-        $("#pass-check").change(function() {
-            if ($("#pass-check").is(":checked")) {
-                $("#pass-toggle").get(0).type = "text"; // show password
-            } else {
-                $("#pass-toggle").get(0).type = "password"; // hide it
-            }
+        $("#pass-check").toggle(function() {
+            $("#pass-toggle").get(0).type = "text"; // show password
+            $(this).html("Hide Pass");
+        }, function() {
+            $("#pass-toggle").get(0).type = "password"; // hide it
+            $(this).html("Show Pass");
         });
     </script>
 </html>
