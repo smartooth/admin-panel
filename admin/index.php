@@ -15,11 +15,18 @@
                 $post_major = isset($_POST["major"]) ? 1 : 0;
                 $post_type = $_POST["type"];
                 $post_author = $_POST["author"];
+
+
+                $db = new db();
+                $query = $db->query("SHOW TABLE STATUS LIKE 'changelog'");
+                $post_id = $db->fetch_array()["Auto_increment"];
+
+
                 if ($post_author != $user["id"]) {
                     break;
                 }
                 if ($post_priv == 0) {
-                    twitter_announce($post_changes, $post_type, $user["name"]);
+                    twitter_announce($post_changes, $post_id);
                 }
                 Changelog::add_change(
                                     $post_changes,

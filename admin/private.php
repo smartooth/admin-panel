@@ -217,37 +217,49 @@
         }
     }
 
-    function twitter_announce($changes, $type, $author) {
+    function linkify($link) {
+        if ((strpos($link, "http://") === 0)
+            or (strpos($link, "https://") === 0)) {
+            // we have a link
+            $api_url = "http://api.waa.ai/?url=" . urlencode($link);
+            $new_url = file_get_contents($api_url);
+
+            if (strpos($new_url, "http://waa.ai/") !== 0)
+                return false; // eek
+
+            //var_dump($new_url);
+            return $new_url;
+        } else {
+            //echo "bad input";
+            return false;
+        }
+    }
+
+    function twitter_announce($changes, $id) {
         // TODO: return false if no twitter account or if not valid
         $db = new db();
         $details = $db->query("SELECT * FROM twitter WHERE username='LoveDespite'");
         $details = $details->fetch_assoc();
         $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET,
                                     $details["token"], $details["secret"]);
-        switch ($type) {
-            case 0:
-                $tmp_type = "[ADD]";
-                break;
-            case 1:
-                $tmp_type = "[FIX]";
-                break;
-            case 2:
-                $tmp_type = "[DEL]";
-                break;
-            default:
-                $tmp_type = "";
-                break;
-        }
         $changes = preg_replace("(<.*>)", "", $changes);
-        // [FIX] (.*) -author
-        $len = strlen($author) + 8; // 5 = the above + spacing
-        if (strlen($changes) > (140 - $len)) {
-            $changes = substr($changes, 0, ((140 - $len) - 3)) . "...";
+
+        $url = linkify("http://love-despite.com/changelog/#$id");
+
+        if (!$url)
+            return; // nope, waa.ai ain't working.
+
+        $diff = strlen($url) + 8;
+
+        if (strlen($changes) > (139 - $diff)) {
+            $diff2 = $diff + 1;
+            $changes = substr($changes, 0, (139 - $diff2)) . "…"";
         }
-        $status_update = $tmp_type . " " . $changes . " -" . $author;
-        //echo $status_update;
-        //print_r($details);
+
+        $status_update = "Update: $changes $url";
+
         $twitter->post('statuses/update', array('status' => $status_update));
+
         return;
     }
     $user = get_user_array();
