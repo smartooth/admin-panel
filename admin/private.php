@@ -253,7 +253,7 @@
 
         if (strlen($changes) > (139 - $diff)) {
             $diff2 = $diff + 1;
-            $changes = substr($changes, 0, (139 - $diff2)) . "…"";
+            $changes = substr($changes, 0, (139 - $diff2)) . "…";
         }
 
         $status_update = "Update: $changes $url";
