@@ -20,7 +20,7 @@
                 $db = new db();
                 $query = $db->query("SHOW TABLE STATUS LIKE 'changelog'");
                 $post_id = $db->fetch_array()["Auto_increment"];
-
+                $db->close();
 
                 if ($post_author != $user["id"]) {
                     break;
