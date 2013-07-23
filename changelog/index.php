@@ -59,11 +59,14 @@
         if ($row["private"] == 1) { continue; }
         $comment = $row["comment"];
         echo <<<CHANGE
-                    <div class="well">
-                        <h4 style="margin: 0" class="{$type}">{$row["name"]}, in <span class="muted">Programming</span></h4>
-                        <small>{$row["date"]}</small>
-                        <p class="{$class_}" style="margin: 0">{$comment}</p>
-                    </div>
+                    <section id="{$row["id"]}">
+                        <div class="well">
+                            <h4 style="margin: 0" class="{$type}">{$row["name"]}, in <span class="muted">Programming</span></h4>
+                            <small>{$row["date"]}</small>
+                            <p class="{$class_}" style="margin: 0">{$comment}</p>
+                        </div>
+                    </section>
+
 CHANGE;
         }
 ?>
