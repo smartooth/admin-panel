@@ -4,7 +4,7 @@
     $changes = Changelog::read_array();
     include("../admin/templates/header.php");
 ?>
-    <body> 
+    <body>
         <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container-fluid">
@@ -29,7 +29,7 @@
                     </div>
                 </div>
             </div>
-        </div>    
+        </div>
         <div class="container-fluid">
             <div class="row-fluid">
                 <div class="span2 hidden-phone">
@@ -61,7 +61,7 @@
         echo <<<CHANGE
                     <section id="{$row["id"]}">
                         <div class="well">
-                            <h4 style="margin: 0" class="{$type}">{$row["name"]}, in <span class="muted">Programming</span></h4>
+                            <h4 style="margin: 0" class="{$type}">{$row["name"]}, in <span class="muted">{$row["category"]}</span></h4>
                             <small>{$row["date"]}</small>
                             <p class="{$class_}" style="margin: 0">{$comment}</p>
                         </div>
