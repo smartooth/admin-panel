@@ -15,11 +15,12 @@
                 $post_major = isset($_POST["major"]) ? 1 : 0;
                 $post_type = $_POST["type"];
                 $post_author = $_POST["author"];
+                $post_category = $_POST["category"];
 
 
                 $db = new db();
                 $query = $db->query("SHOW TABLE STATUS LIKE 'changelog'");
-                $post_id = $db->fetch_array()["Auto_increment"];
+                $post_id = $query->fetch_array()["Auto_increment"];
                 $db->close();
 
                 if ($post_author != $user["id"]) {
@@ -33,7 +34,8 @@
                                     $post_author,
                                     $post_priv,
                                     $post_major,
-                                    $post_type);
+                                    $post_type,
+                                    $post_category);
                 break;
             case "edit":
                 $post_id = isset($_POST["id"]) ? $_POST["id"] : False;
@@ -44,14 +46,16 @@
                 $post_priv = isset($_POST["private"]) ? $_POST["private"] : 0;
                 $post_major = isset($_POST["major"]) ? $_POST["major"] : 0;
                 $post_type = isset($_POST["type"]) ? $_POST["type"] : 0;
+                $post_category = $_POST["category"];
+
                 if ($post_id) {
                     Changelog::edit_change(
                                         $post_id,
                                         $post_changes,
                                         $post_priv,
                                         $post_major,
-                                        $post_type);
-                }
+                                        $post_type,
+                                        $post_category);
                 break;
             case "delete":
                 if (isset($_POST["id"])) {
@@ -84,6 +88,7 @@
                                 <input type="hidden" name="target" value="new">
                                 <input type="hidden" name="author" value="<?= $user["id"] ?>">
                                 <textarea rows="3" name="comment" class="span12" placeholder="Enter commit here"></textarea>
+                                <input type="text" placeholder="Category" name="category">
                                 <p>
                                     <input type="checkbox" name="major" value="1"> Major? 
                                     <input type="checkbox" name="private" value="1"> Private?
@@ -136,6 +141,7 @@
                                 <input type="hidden" name="target" value="edit">
                                 <input type="hidden" name="id" value="{$row["id"]}">
                                 <textarea rows="3" name="comment" class="span12" required>{$comment}</textarea>
+                                <input type="text" value="{$row["category"]}" name="category">
                                 <p>
                                 <input type="checkbox" name="major" value="1"{$major}> Major? 
                                 <input type="checkbox" name="private" value="1"{$private}> Private?
