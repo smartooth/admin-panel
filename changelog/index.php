@@ -56,7 +56,8 @@
             $type = "N/A"; break;
         }
         $class_ = $row["major"] == 1 ? "text-warning" : "";
-        if ($row["private"] == 1) { continue; }
+        if ($row["private"] == 1)
+            continue;
         $comment = $row["comment"];
         echo <<<CHANGE
                     <section id="{$row["id"]}">

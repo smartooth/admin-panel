@@ -147,11 +147,11 @@
         }
     }
     class Changelog {
-        public static function add_change($change, $author, $priv, $major, $type) {
+        public static function add_change($change, $author, $priv, $major, $type, $category) {
             $db = new db();
             $time = date("Y-m-d H:i:s");
-            if ($query = $db->prepare("INSERT INTO `changelog` ( `type`, `comment`, `authorid`, `private`, `major`, `date` ) VALUES ( ?,?,?,?,?,?)")) {
-                $query->bind_param("isiiis", $type, $change, $author, $priv, $major, $time);
+            if ($query = $db->prepare("INSERT INTO `changelog` ( `type`, `comment`, `authorid`, `private`, `major`, `date`, `catego$
+                $query->bind_param("isiiiss", $type, $change, $author, $priv, $major, $time, $category);
                 $query->execute();
                 $query->close();
                 $db->close();
@@ -170,18 +170,20 @@
             }
             $db->close();
         }
-        public static function edit_change($id, $comment, $private, $major, $type) {
+        public static function edit_change($id, $comment, $private, $major, $type, $category) {
             $db = new db();
-            if ($query = $db->prepare("UPDATE changelog SET comment=?, private=?, major=?, type=? WHERE id=?")) {
-                $query->bind_param("siiii", $comment, $private, $major, $type, $id);
+            if ($query = $db->prepare("UPDATE changelog SET comment=?, private=?, major=?, type=?, category=? WHERE id=?")) {
+                $query->bind_param("siiisi", $comment, $private, $major, $type, $category, $id);
                 $query->execute();
                 $query->close();
+            } else {
+                echo "Binding the edit failed";
             }
             $db->close();
         }
         public static function read_array($limit = 25) {
             $db = new db();
-            $query = "SELECT `changelog`.*, `users`.`name` FROM `changelog` JOIN `users` ON `changelog`.`authorid` = `users`.`id` ORDER BY `changelog`.`date` DESC LIMIT {$limit};";
+            $query = "SELECT `changelog`.*, `users`.`name` FROM `changelog` JOIN `users` ON `changelog`.`authorid` = `users`.`id` O$
             $array = array();
             $res = $db->query($query);
             while($row = $res->fetch_assoc()) { // Input can only be int. It's a waste of space to use a prepared query...
